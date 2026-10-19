@@ -1,0 +1,13 @@
+/.analysis-deps/
+/__pycache__/
+/assaultcube-analysis/
+/AssaultCube-1.3.0.2-offsets.zip
+/analyze_ac.py
+/build_offset_map.py
+/discover_globals.py
+/inspect_ac.py
+/verify_artifacts.py
+/github_publish.py
+/github-account.json
+/github-repository.json
+/write_public_guide.py

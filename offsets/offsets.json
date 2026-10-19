@@ -1,0 +1,1397 @@
+{
+  "build": {
+    "exe": "ac_client.exe",
+    "sha256": "5b588e6ff7710fa0170553506a50bfa14750ccb438a154e4ea0e0b1ba621cefb",
+    "image_base": "0x400000",
+    "machine": "0x14c",
+    "timestamp": 1648207479
+  },
+  "source_tag": "v1.3.0.2",
+  "source_commit": "1ece5af7533983bb8f827616381d282470793d90",
+  "globals": {
+    "player1": {
+      "va": 5811200,
+      "rva": 1616896,
+      "type": "playerent*",
+      "evidence": "0x4090E0 initializes with newplayerent()"
+    },
+    "players_buf": {
+      "va": 5811204,
+      "rva": 1616900,
+      "type": "playerent**",
+      "evidence": "0x479740 indexes buf[i] and checks null"
+    },
+    "players_capacity": {
+      "va": 5811208,
+      "rva": 1616904,
+      "type": "int",
+      "evidence": "Cube vector<T>: buf, alen, ulen"
+    },
+    "players_length": {
+      "va": 5811212,
+      "rva": 1616908,
+      "type": "int",
+      "evidence": "0x479723 / 0x479790 loop bounds"
+    },
+    "camera1": {
+      "va": 5759144,
+      "rva": 1564840,
+      "type": "physent*",
+      "evidence": "0x457498 and 0x479734; normally player1"
+    },
+    "mvmatrix": {
+      "va": 5758992,
+      "rva": 1564688,
+      "type": "float[16]",
+      "evidence": "0x4570D9; GL_MODELVIEW_MATRIX=0xBA6"
+    },
+    "projmatrix": {
+      "va": 5759152,
+      "rva": 1564848,
+      "type": "float[16]",
+      "evidence": "0x4570E9; GL_PROJECTION_MATRIX=0xBA7"
+    },
+    "mvpmatrix": {
+      "va": 5758928,
+      "rva": 1564624,
+      "type": "float[16]",
+      "evidence": "0x457101 destination; projection * modelview"
+    },
+    "invmvmatrix": {
+      "va": 5759072,
+      "rva": 1564768,
+      "type": "float[16]",
+      "evidence": "0x4571AE / 0x4571B3"
+    },
+    "invmvpmatrix": {
+      "va": 5758864,
+      "rva": 1564560,
+      "type": "float[16]",
+      "evidence": "0x457280 / 0x457285"
+    },
+    "camright": {
+      "va": 5841032,
+      "rva": 1646728,
+      "type": "vec3",
+      "evidence": "readmatrices: mvmatrix[0,4,8]"
+    },
+    "camup": {
+      "va": 5841020,
+      "rva": 1646716,
+      "type": "vec3",
+      "evidence": "readmatrices: mvmatrix[1,5,9]"
+    },
+    "camdir": {
+      "va": 5841008,
+      "rva": 1646704,
+      "type": "vec3",
+      "evidence": "readmatrices: -mvmatrix[2,6,10]"
+    },
+    "aspect": {
+      "va": 5759136,
+      "rva": 1564832,
+      "type": "float",
+      "evidence": "0x457570 perspective setup; projection[5]/projection[0]"
+    },
+    "fovy": {
+      "va": 5759140,
+      "rva": 1564836,
+      "type": "float",
+      "evidence": "0x4574D7 perspective setup; 2*atan(1/projection[5])"
+    },
+    "farplane": {
+      "va": 5759068,
+      "rva": 1564764,
+      "type": "int",
+      "evidence": "0x4574C7 perspective setup"
+    },
+    "fov": {
+      "va": 5810124,
+      "rva": 1615820,
+      "type": "float",
+      "evidence": "0x406D5D / 0x406D6A FVAR registration"
+    },
+    "scopefov": {
+      "va": 5810228,
+      "rva": 1615924,
+      "type": "int",
+      "evidence": "0x406D87 registration"
+    },
+    "spectfov": {
+      "va": 5810232,
+      "rva": 1615928,
+      "type": "int",
+      "evidence": "0x406DB4 registration"
+    },
+    "spectfovremote": {
+      "va": 5810236,
+      "rva": 1615932,
+      "type": "int",
+      "evidence": "0x406DE4 registration"
+    },
+    "screenw": {
+      "va": 5840600,
+      "rva": 1646296,
+      "type": "int",
+      "evidence": "0x40F3C4 registration"
+    },
+    "screenh": {
+      "va": 5840604,
+      "rva": 1646300,
+      "type": "int",
+      "evidence": "0x40F3F4 registration"
+    },
+    "gamespeed": {
+      "va": 5840696,
+      "rva": 1646392,
+      "type": "int",
+      "evidence": "0x40F937 registration; percent"
+    },
+    "ispaused": {
+      "va": 5840700,
+      "rva": 1646396,
+      "type": "int",
+      "evidence": "0x40F967 registration of console variable paused"
+    },
+    "maxfps": {
+      "va": 5840676,
+      "rva": 1646372,
+      "type": "int",
+      "evidence": "0x40F8A7 registration"
+    },
+    "gamemode": {
+      "va": 5811192,
+      "rva": 1616888,
+      "type": "int",
+      "evidence": "0x409064 registration"
+    },
+    "guns": {
+      "va": 5684416,
+      "rva": 1490112,
+      "type": "guninfo[9]",
+      "evidence": "0x4CC085 etc.; stride 0x68"
+    },
+    "server_clients_buf": {
+      "va": 5812408,
+      "rva": 1618104,
+      "type": "client**",
+      "evidence": "0x4948B5 followed by [eax+ebp*4]"
+    },
+    "server_clients_capacity": {
+      "va": 5812412,
+      "rva": 1618108,
+      "type": "int",
+      "evidence": "Cube vector<T>: buf, alen, ulen"
+    },
+    "server_clients_length": {
+      "va": 5812416,
+      "rva": 1618112,
+      "type": "int",
+      "evidence": "0x4948A9 loop bounds"
+    },
+    "sg": {
+      "va": 5684380,
+      "rva": 1490076,
+      "type": "servergame*",
+      "evidence": "0x494EAE; gamemillis at sg+0x340"
+    }
+  },
+  "playerent_size": 1032,
+  "playerent_fields": [
+    {
+      "name": "vtable_physent",
+      "offset": 0,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "o",
+      "offset": 4,
+      "type": "vec3",
+      "count": 1,
+      "size": 12
+    },
+    {
+      "name": "vel",
+      "offset": 16,
+      "type": "vec3",
+      "count": 1,
+      "size": 12
+    },
+    {
+      "name": "deltapos",
+      "offset": 28,
+      "type": "vec3",
+      "count": 1,
+      "size": 12
+    },
+    {
+      "name": "newpos",
+      "offset": 40,
+      "type": "vec3",
+      "count": 1,
+      "size": 12
+    },
+    {
+      "name": "yaw",
+      "offset": 52,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "pitch",
+      "offset": 56,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "roll",
+      "offset": 60,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "pitchvel",
+      "offset": 64,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "maxspeed",
+      "offset": 68,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "timeinair",
+      "offset": 72,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "radius",
+      "offset": 76,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "eyeheight",
+      "offset": 80,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "maxeyeheight",
+      "offset": 84,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "aboveeye",
+      "offset": 88,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "inwater",
+      "offset": 92,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "onfloor",
+      "offset": 93,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "onladder",
+      "offset": 94,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "jumpnext",
+      "offset": 95,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "jumpd",
+      "offset": 96,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "crouching",
+      "offset": 97,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "crouchedinair",
+      "offset": 98,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "trycrouch",
+      "offset": 99,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "cancollide",
+      "offset": 100,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "stuck",
+      "offset": 101,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "scoping",
+      "offset": 102,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "lastjump",
+      "offset": 104,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastjumpheight",
+      "offset": 108,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastsplash",
+      "offset": 112,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "move",
+      "offset": 116,
+      "type": "i8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "strafe",
+      "offset": 117,
+      "type": "i8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "state",
+      "offset": 118,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "type",
+      "offset": 119,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "eyeheightvel",
+      "offset": 120,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "last_pos",
+      "offset": 124,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "k_left",
+      "offset": 128,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "k_right",
+      "offset": 129,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "k_up",
+      "offset": 130,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "k_down",
+      "offset": 131,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "prev",
+      "offset": 132,
+      "type": "animstate",
+      "count": 2,
+      "size": 40
+    },
+    {
+      "name": "current",
+      "offset": 172,
+      "type": "animstate",
+      "count": 2,
+      "size": 40
+    },
+    {
+      "name": "lastanimswitchtime",
+      "offset": 212,
+      "type": "i32",
+      "count": 2,
+      "size": 8
+    },
+    {
+      "name": "lastmodel",
+      "offset": 220,
+      "type": "u32",
+      "count": 2,
+      "size": 8
+    },
+    {
+      "name": "lastrendered",
+      "offset": 228,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "vtable_playerstate",
+      "offset": 232,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "health",
+      "offset": 236,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "armour",
+      "offset": 240,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "primary",
+      "offset": 244,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "nextprimary",
+      "offset": 248,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "gunselect",
+      "offset": 252,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "akimbo",
+      "offset": 256,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "ammo",
+      "offset": 260,
+      "type": "i32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "mag",
+      "offset": 296,
+      "type": "i32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "gunwait",
+      "offset": 332,
+      "type": "i32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "pstatshots",
+      "offset": 368,
+      "type": "i32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "pstatdamage",
+      "offset": 404,
+      "type": "i32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "curskin",
+      "offset": 440,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "nextskin",
+      "offset": 444,
+      "type": "i32",
+      "count": 2,
+      "size": 8
+    },
+    {
+      "name": "clientnum",
+      "offset": 452,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastupdate",
+      "offset": 456,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "plag",
+      "offset": 460,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "ping",
+      "offset": 464,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "address",
+      "offset": 468,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lifesequence",
+      "offset": 472,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "frags",
+      "offset": 476,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "flagscore",
+      "offset": 480,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "deaths",
+      "offset": 484,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "tks",
+      "offset": 488,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastaction",
+      "offset": 492,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastmove",
+      "offset": 496,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastpain",
+      "offset": 500,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastvoicecom",
+      "offset": 504,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastdeath",
+      "offset": 508,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "clientrole",
+      "offset": 512,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "attacking",
+      "offset": 516,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "name",
+      "offset": 517,
+      "type": "u8",
+      "count": 260,
+      "size": 260
+    },
+    {
+      "name": "team",
+      "offset": 780,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "weaponchanging",
+      "offset": 784,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "nextweapon",
+      "offset": 788,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "spectatemode",
+      "offset": 792,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "followplayercn",
+      "offset": 796,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "eardamagemillis",
+      "offset": 800,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "maxroll",
+      "offset": 804,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "maxrolleffect",
+      "offset": 808,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "movroll",
+      "offset": 812,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "effroll",
+      "offset": 816,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "ffov",
+      "offset": 820,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "scopefov",
+      "offset": 824,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "weapons",
+      "offset": 828,
+      "type": "u32",
+      "count": 9,
+      "size": 36
+    },
+    {
+      "name": "prevweaponsel",
+      "offset": 864,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "weaponsel",
+      "offset": 868,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "nextweaponsel",
+      "offset": 872,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "primweap",
+      "offset": 876,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "nextprimweap",
+      "offset": 880,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "lastattackweapon",
+      "offset": 884,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "history",
+      "offset": 888,
+      "type": "poshist",
+      "count": 1,
+      "size": 96
+    },
+    {
+      "name": "skin_noteam",
+      "offset": 984,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "skin_cla",
+      "offset": 988,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "skin_rvsf",
+      "offset": 992,
+      "type": "u32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "deltayaw",
+      "offset": 996,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "deltapitch",
+      "offset": 1000,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "newyaw",
+      "offset": 1004,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "newpitch",
+      "offset": 1008,
+      "type": "f32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "smoothmillis",
+      "offset": 1012,
+      "type": "i32",
+      "count": 1,
+      "size": 4
+    },
+    {
+      "name": "head",
+      "offset": 1016,
+      "type": "vec3",
+      "count": 1,
+      "size": 12
+    },
+    {
+      "name": "ignored",
+      "offset": 1028,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "muted",
+      "offset": 1029,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    },
+    {
+      "name": "nocorpse",
+      "offset": 1030,
+      "type": "u8",
+      "count": 1,
+      "size": 1
+    }
+  ],
+  "weapon_fields": [
+    {
+      "name": "vtable",
+      "offset": 0,
+      "type": "u32"
+    },
+    {
+      "name": "type",
+      "offset": 4,
+      "type": "i32"
+    },
+    {
+      "name": "owner",
+      "offset": 8,
+      "type": "u32"
+    },
+    {
+      "name": "info",
+      "offset": 12,
+      "type": "u32"
+    },
+    {
+      "name": "ammo_ref",
+      "offset": 16,
+      "type": "u32"
+    },
+    {
+      "name": "mag_ref",
+      "offset": 20,
+      "type": "u32"
+    },
+    {
+      "name": "gunwait_ref",
+      "offset": 24,
+      "type": "u32"
+    },
+    {
+      "name": "shots",
+      "offset": 28,
+      "type": "i32"
+    },
+    {
+      "name": "reloading",
+      "offset": 32,
+      "type": "i32"
+    },
+    {
+      "name": "lastaction",
+      "offset": 36,
+      "type": "i32"
+    }
+  ],
+  "guninfo_size": 104,
+  "guninfo_fields": [
+    {
+      "name": "modelname",
+      "offset": 0,
+      "type": "char[23]"
+    },
+    {
+      "name": "title",
+      "offset": 23,
+      "type": "char[42]"
+    },
+    {
+      "name": "sound",
+      "offset": 66,
+      "type": "short"
+    },
+    {
+      "name": "reload",
+      "offset": 68,
+      "type": "short"
+    },
+    {
+      "name": "reloadtime",
+      "offset": 70,
+      "type": "short"
+    },
+    {
+      "name": "attackdelay",
+      "offset": 72,
+      "type": "short"
+    },
+    {
+      "name": "damage",
+      "offset": 74,
+      "type": "short"
+    },
+    {
+      "name": "piercing",
+      "offset": 76,
+      "type": "short"
+    },
+    {
+      "name": "projspeed",
+      "offset": 78,
+      "type": "short"
+    },
+    {
+      "name": "part",
+      "offset": 80,
+      "type": "short"
+    },
+    {
+      "name": "spread",
+      "offset": 82,
+      "type": "short"
+    },
+    {
+      "name": "recoil",
+      "offset": 84,
+      "type": "short"
+    },
+    {
+      "name": "magsize",
+      "offset": 86,
+      "type": "short"
+    },
+    {
+      "name": "mdl_kick_rot",
+      "offset": 88,
+      "type": "short"
+    },
+    {
+      "name": "mdl_kick_back",
+      "offset": 90,
+      "type": "short"
+    },
+    {
+      "name": "recoilincrease",
+      "offset": 92,
+      "type": "short"
+    },
+    {
+      "name": "recoilbase",
+      "offset": 94,
+      "type": "short"
+    },
+    {
+      "name": "maxrecoil",
+      "offset": 96,
+      "type": "short"
+    },
+    {
+      "name": "recoilbackfade",
+      "offset": 98,
+      "type": "short"
+    },
+    {
+      "name": "pushfactor",
+      "offset": 100,
+      "type": "short"
+    },
+    {
+      "name": "isauto",
+      "offset": 102,
+      "type": "bool"
+    }
+  ],
+  "server_client_fields": [
+    {
+      "name": "type",
+      "offset": 0,
+      "type": "i32"
+    },
+    {
+      "name": "clientnum",
+      "offset": 4,
+      "type": "i32"
+    },
+    {
+      "name": "clientsequence",
+      "offset": 8,
+      "type": "i32"
+    },
+    {
+      "name": "peer",
+      "offset": 12,
+      "type": "u32"
+    },
+    {
+      "name": "hostname",
+      "offset": 16,
+      "type": "char[260]"
+    },
+    {
+      "name": "name",
+      "offset": 656,
+      "type": "char[260]"
+    },
+    {
+      "name": "team",
+      "offset": 916,
+      "type": "i32"
+    },
+    {
+      "name": "state_base",
+      "offset": 1028,
+      "type": "playerstate"
+    },
+    {
+      "name": "health",
+      "offset": 1032,
+      "type": "i32"
+    },
+    {
+      "name": "armour",
+      "offset": 1036,
+      "type": "i32"
+    },
+    {
+      "name": "primary",
+      "offset": 1040,
+      "type": "i32"
+    },
+    {
+      "name": "nextprimary",
+      "offset": 1044,
+      "type": "i32"
+    },
+    {
+      "name": "gunselect",
+      "offset": 1048,
+      "type": "i32"
+    },
+    {
+      "name": "akimbo",
+      "offset": 1052,
+      "type": "u8"
+    },
+    {
+      "name": "ammo",
+      "offset": 1056,
+      "type": "int[9]"
+    },
+    {
+      "name": "mag",
+      "offset": 1092,
+      "type": "int[9]"
+    },
+    {
+      "name": "gunwait",
+      "offset": 1128,
+      "type": "int[9]"
+    },
+    {
+      "name": "pstatshots",
+      "offset": 1164,
+      "type": "int[9]"
+    },
+    {
+      "name": "pstatdamage",
+      "offset": 1200,
+      "type": "int[9]"
+    },
+    {
+      "name": "o",
+      "offset": 1236,
+      "type": "vec3"
+    },
+    {
+      "name": "state",
+      "offset": 1248,
+      "type": "i32"
+    },
+    {
+      "name": "lastdeath",
+      "offset": 1252,
+      "type": "i32"
+    },
+    {
+      "name": "lastspawn",
+      "offset": 1256,
+      "type": "i32"
+    },
+    {
+      "name": "spawn",
+      "offset": 1260,
+      "type": "i32"
+    },
+    {
+      "name": "lifesequence",
+      "offset": 1264,
+      "type": "i32"
+    },
+    {
+      "name": "lastclaction",
+      "offset": 1268,
+      "type": "i32"
+    },
+    {
+      "name": "forced",
+      "offset": 1272,
+      "type": "u8"
+    },
+    {
+      "name": "lastshot",
+      "offset": 1276,
+      "type": "i32"
+    },
+    {
+      "name": "akimbomillis",
+      "offset": 1316,
+      "type": "i32"
+    },
+    {
+      "name": "scoped",
+      "offset": 1320,
+      "type": "u8"
+    },
+    {
+      "name": "flagscore",
+      "offset": 1324,
+      "type": "i32"
+    },
+    {
+      "name": "frags",
+      "offset": 1328,
+      "type": "i32"
+    },
+    {
+      "name": "teamkills",
+      "offset": 1332,
+      "type": "i32"
+    },
+    {
+      "name": "deaths",
+      "offset": 1336,
+      "type": "i32"
+    },
+    {
+      "name": "events_buf",
+      "offset": 1380,
+      "type": "u32"
+    },
+    {
+      "name": "events_capacity",
+      "offset": 1384,
+      "type": "i32"
+    },
+    {
+      "name": "events_length",
+      "offset": 1388,
+      "type": "i32"
+    }
+  ],
+  "weapons": [
+    {
+      "id": 0,
+      "name": "knife",
+      "ammo": 260,
+      "mag": 296,
+      "gunwait": 332,
+      "weapon_ptr": 828,
+      "server_ammo": 1056,
+      "server_mag": 1092
+    },
+    {
+      "id": 1,
+      "name": "pistol",
+      "ammo": 264,
+      "mag": 300,
+      "gunwait": 336,
+      "weapon_ptr": 832,
+      "server_ammo": 1060,
+      "server_mag": 1096
+    },
+    {
+      "id": 2,
+      "name": "carbine",
+      "ammo": 268,
+      "mag": 304,
+      "gunwait": 340,
+      "weapon_ptr": 836,
+      "server_ammo": 1064,
+      "server_mag": 1100
+    },
+    {
+      "id": 3,
+      "name": "shotgun",
+      "ammo": 272,
+      "mag": 308,
+      "gunwait": 344,
+      "weapon_ptr": 840,
+      "server_ammo": 1068,
+      "server_mag": 1104
+    },
+    {
+      "id": 4,
+      "name": "subgun",
+      "ammo": 276,
+      "mag": 312,
+      "gunwait": 348,
+      "weapon_ptr": 844,
+      "server_ammo": 1072,
+      "server_mag": 1108
+    },
+    {
+      "id": 5,
+      "name": "sniper",
+      "ammo": 280,
+      "mag": 316,
+      "gunwait": 352,
+      "weapon_ptr": 848,
+      "server_ammo": 1076,
+      "server_mag": 1112
+    },
+    {
+      "id": 6,
+      "name": "assault",
+      "ammo": 284,
+      "mag": 320,
+      "gunwait": 356,
+      "weapon_ptr": 852,
+      "server_ammo": 1080,
+      "server_mag": 1116
+    },
+    {
+      "id": 7,
+      "name": "grenade",
+      "ammo": 288,
+      "mag": 324,
+      "gunwait": 360,
+      "weapon_ptr": 856,
+      "server_ammo": 1084,
+      "server_mag": 1120
+    },
+    {
+      "id": 8,
+      "name": "akimbo",
+      "ammo": 292,
+      "mag": 328,
+      "gunwait": 364,
+      "weapon_ptr": 860,
+      "server_ammo": 1088,
+      "server_mag": 1124
+    }
+  ]
+}

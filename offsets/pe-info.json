@@ -1,0 +1,7 @@
+{
+  "exe": "ac_client.exe",
+  "sha256": "5b588e6ff7710fa0170553506a50bfa14750ccb438a154e4ea0e0b1ba621cefb",
+  "image_base": "0x400000",
+  "machine": "0x14c",
+  "timestamp": 1648207479
+}

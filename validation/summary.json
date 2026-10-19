@@ -1,0 +1,32 @@
+{
+  "build_sha256": "5b588e6ff7710fa0170553506a50bfa14750ccb438a154e4ea0e0b1ba621cefb",
+  "checked_on": "2026-10-19",
+  "method": "Static PE disassembly, matching official source, and read-only runtime sampling.",
+  "checks": {
+    "weapon_knife_references": true,
+    "weapon_pistol_references": true,
+    "weapon_carbine_references": true,
+    "weapon_shotgun_references": true,
+    "weapon_subgun_references": true,
+    "weapon_sniper_references": true,
+    "weapon_assault_references": true,
+    "weapon_grenade_references": true,
+    "weapon_akimbo_references": true,
+    "projection_times_view_matches_mvp": true,
+    "mvmatrix_inverse_matches": true,
+    "mvpmatrix_inverse_matches": true,
+    "aspect_matches_projection": true,
+    "fovy_matches_projection": true,
+    "player_has_expected_vtables": true,
+    "camera_readable": true
+  },
+  "matrix_product_max_abs_error": 2.074501935567241e-06,
+  "remote_entity_count_in_sample": 0,
+  "limitations": [
+    "Runtime sampling was not synchronized with rendering.",
+    "No remote players or bots were present in the sampled client entity vector.",
+    "Not every field was behaviorally tested.",
+    "The Cheat Engine GUI and the IDAPython script were not exercised.",
+    "All 108 player field offsets were checked using compiled C++ static assertions."
+  ]
+}
